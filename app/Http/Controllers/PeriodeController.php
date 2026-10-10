@@ -7,59 +7,72 @@ use Illuminate\Http\Request;
 
 class PeriodeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Menampilkan semua data periode
     public function index()
     {
-        //
+        $periodes = Periode::all();
+
+        return view('periode.index', compact('periodes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Menampilkan form tambah periode
     public function create()
     {
-        //
+        return view('periode.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Menyimpan data periode baru
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'periode' => 'required|string|max:255',
+            'singkatan' => 'required|string|max:10',
+        ]);
+
+        Periode::create($request->only([
+            'periode',
+            'singkatan',
+        ]));
+
+        return redirect()->route('periode.index')
+            ->with('success', 'Data periode berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // Menampilkan detail periode
     public function show(Periode $periode)
     {
-        //
+        return view('periode.show', compact('periode'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Menampilkan form edit periode
     public function edit(Periode $periode)
     {
-        //
+        return view('periode.edit', compact('periode'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // Memperbarui data periode
     public function update(Request $request, Periode $periode)
     {
-        //
+        $request->validate([
+            'periode' => 'required|string|max:255',
+            'singkatan' => 'required|string|max:10',
+        ]);
+
+        $periode->update($request->only([
+            'periode',
+            'singkatan',
+        ]));
+
+        return redirect()->route('periode.index')
+            ->with('success', 'Data periode berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Menghapus data periode
     public function destroy(Periode $periode)
     {
-        //
+        $periode->delete();
+
+        return redirect()->route('periode.index')
+            ->with('success', 'Data periode berhasil dihapus.');
     }
 }
